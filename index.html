@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portfolio</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #121212;
+      --accent-color: #007BFF;
+    }
+
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --accent-color: #0d6efd;
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: background-color 0.4s, color 0.4s;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      scroll-behavior: smooth;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      padding: 1rem 2rem;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .toggle-btn {
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    section {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .project-card {
+      margin: 1rem auto;
+      padding: 1rem;
+      max-width: 600px;
+      background: rgba(0,0,0,0.05);
+      border-radius: 10px;
+    }
+
+    /* Reveal on scroll */
+    .hidden {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+
+    .show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Portfolio</h1>
+    <button class="toggle-btn" id="themeToggle">Toggle Dark Mode</button>
+  </header>
+
+  <section class="hero hidden">
+    <h2>Welcome to My Portfolio</h2>
+    <p>Frontend Developer | JavaScript Enthusiast | UI/UX Designer</p>
+  </section>
+
+  <section class="projects hidden">
+    <h2>Projects</h2>
+    <div class="project-card">
+      <h3>Project One</h3>
+      <p>A cool web app built with HTML, CSS, and JavaScript.</p>
+    </div>
+    <div class="project-card">
+      <h3>Project Two</h3>
+      <p>An animated portfolio site with dark mode support.</p>
+    </div>
+  </section>
+
+  <section class="contact hidden">
+    <h2>Contact Me</h2>
+    <p>Email: example@example.com</p>
+  </section>
+
+  <script>
+    // Toggle Dark Mode
+    const toggleBtn = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+
+    document.querySelectorAll('.hidden').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
