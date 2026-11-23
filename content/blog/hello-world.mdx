@@ -1,0 +1,48 @@
+export const metadata = {
+  title: "Hello, World",
+  date: "2026-11-23",
+  summary: "A first post that shows off math and code rendering.",
+  tags: ["meta", "latex"],
+};
+
+哈囉！這是我的新的個人網頁～
+
+## Math
+
+Inline math uses single dollars: Euler's identity is $e^{i\pi} + 1 = 0$.
+
+Display math uses double dollars:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
+\qquad
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+$$
+
+Aligned environments work too:
+
+$$
+\begin{aligned}
+(a+b)^2 &= (a+b)(a+b) \\
+        &= a^2 + 2ab + b^2
+\end{aligned}
+$$
+
+## Code
+
+```ts title="fib.ts" {2}
+export function fib(n: number): number {
+  return n < 2 ? n : fib(n - 1) + fib(n - 2);
+}
+```
+
+```python
+def primes(limit):
+    sieve = [True] * limit
+    for i in range(2, limit):
+        if sieve[i]:
+            yield i
+            sieve[i*i::i] = [False] * len(sieve[i*i::i])
+```
+
+Inline code like `const x = 42` is styled separately.

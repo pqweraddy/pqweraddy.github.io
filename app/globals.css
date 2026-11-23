@@ -1,0 +1,163 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Dark only, neon accents. */
+:root {
+  color-scheme: dark;
+  --background: #07060d;
+  --foreground: #ecebf5;
+  --muted: #9a97b0;
+  --line: #262340;
+  --accent: #ff3df0;   /* neon magenta */
+  --accent-2: #22e6ff; /* neon cyan */
+  --accent-3: #8b5cff; /* neon violet */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-geist-sans);
+}
+
+body {
+  color: var(--foreground);
+  /* Subtle neon wash behind every page; stays fixed while scrolling. */
+  background:
+    radial-gradient(50% 40% at 0% 0%, rgb(139 92 255 / 0.16), transparent 70%),
+    radial-gradient(45% 35% at 100% 100%, rgb(34 230 255 / 0.10), transparent 70%),
+    var(--background);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+/* Social icons: neon glow on hover/focus. */
+.social-link {
+  transition: color 0.2s, filter 0.2s, transform 0.2s;
+}
+.social-link:hover,
+.social-link:focus-visible {
+  color: var(--accent);
+  filter: drop-shadow(0 0 6px rgb(255 61 240 / 0.8));
+  transform: translateY(-1px);
+}
+
+/* ---------- Hero ---------- */
+.hero-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 14vw, 17rem);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  color: #fff;
+  text-shadow:
+    0 0 0.02em #fff,
+    0 0 0.08em rgb(255 61 240 / 0.9),
+    0 0 0.25em rgb(255 61 240 / 0.55),
+    0 0 0.6em rgb(139 92 255 / 0.45);
+}
+
+.hero-tagline {
+  color: var(--accent-2);
+  text-shadow: 0 0 12px rgb(34 230 255 / 0.6);
+}
+
+/* Animated neon blobs behind the hero. */
+.hero-glow { isolation: isolate; }
+.hero-glow::before,
+.hero-glow::after {
+  content: "";
+  position: fixed; /* cover the full viewport regardless of hero height */
+  inset: -20%;
+  z-index: -1;
+  filter: blur(60px);
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.hero-glow::before {
+  background:
+    radial-gradient(30% 30% at 25% 35%, rgb(255 61 240 / 0.45), transparent 70%),
+    radial-gradient(28% 28% at 75% 65%, rgb(34 230 255 / 0.35), transparent 70%);
+}
+.hero-glow::after {
+  background:
+    radial-gradient(35% 30% at 60% 25%, rgb(139 92 255 / 0.40), transparent 70%),
+    radial-gradient(25% 25% at 30% 80%, rgb(34 230 255 / 0.20), transparent 70%);
+  animation-duration: 24s;
+  animation-direction: alternate-reverse;
+}
+@keyframes drift {
+  from { transform: translate3d(-4%, -3%, 0) rotate(0deg); }
+  to   { transform: translate3d(4%, 3%, 0) rotate(8deg); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(0.35em); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+.rise { animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .rise, .hero-glow::before, .hero-glow::after { animation: none; }
+}
+
+/* ---------- Prose (MDX) ---------- */
+.prose {
+  --tw-prose-pre-bg: #0f0d1f;
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: #ffffff;
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: #ffffff;
+  --tw-prose-quotes: var(--muted);
+  --tw-prose-quote-borders: var(--line);
+  --tw-prose-hr: var(--line);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-code: #ffffff;
+  --tw-prose-th-borders: var(--line);
+  --tw-prose-td-borders: var(--line);
+}
+.prose :where(h1, h2, h3) { font-weight: 700; letter-spacing: -0.02em; }
+.prose :where(a) { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* Inline code (not inside a highlighted block) */
+.prose :where(:not(pre) > code) {
+  background: #15132a;
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+  padding: 0.1em 0.35em;
+  font-weight: 400;
+}
+.prose :where(:not(pre) > code)::before,
+.prose :where(:not(pre) > code)::after { content: none; }
+
+/* rehype-pretty-code blocks */
+.prose pre {
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.prose pre code { display: grid; }
+.prose pre [data-line] { padding: 0 1.1rem; }
+.prose pre [data-highlighted-line] { background: rgb(255 61 240 / 0.10); box-shadow: inset 2px 0 var(--accent); }
+.prose figure[data-rehype-pretty-code-figure] { margin: 1.5em 0; }
+.prose [data-rehype-pretty-code-title] {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.4rem 0.2rem;
+}
+
+/* KaTeX */
+.prose .katex { font-size: 1.08em; }
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.4em 0; }
