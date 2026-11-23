@@ -1,7 +1,7 @@
 // Edit this file to personalize the site.
 export const site = {
   name: "Paddy Lee",
-  tagline: "Notes on mathematics, code, and the things in between.",
+  tagline: "Work hard, Play hard.",
   description: "Personal site of Paddy Lee — blog, projects, and more.",
   nav: [
     { href: "/blog/", label: "Blog" },
