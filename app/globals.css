@@ -11,6 +11,12 @@
   --accent: #ff3df0;   /* neon magenta */
   --accent-2: #22e6ff; /* neon cyan */
   --accent-3: #8b5cff; /* neon violet */
+  /* Neon glow for the hero name and header logo (em-based, scales with size). */
+  --neon-text:
+    0 0 0.02em #fff,
+    0 0 0.08em rgb(255 61 240 / 0.9),
+    0 0 0.25em rgb(255 61 240 / 0.55),
+    0 0 0.6em rgb(139 92 255 / 0.45);
 }
 
 @theme inline {
@@ -60,12 +66,28 @@ body {
   letter-spacing: -0.05em;
   white-space: nowrap;
   color: #fff;
-  text-shadow:
-    0 0 0.02em #fff,
-    0 0 0.08em rgb(255 61 240 / 0.9),
-    0 0 0.25em rgb(255 61 240 / 0.55),
-    0 0 0.6em rgb(139 92 255 / 0.45);
+  text-shadow: var(--neon-text);
 }
+
+/* Header logo: same face as the hero name, so the scroll morph lands
+   seamlessly. The em-based glow scales down to a subtle neon halo. */
+.site-logo {
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: #fff;
+  text-shadow: var(--neon-text);
+  transition: color 0.2s;
+}
+.site-logo:hover { color: var(--accent); }
+
+/* Home header: transparent over the hero, solid once the name has landed.
+   --p (0 → 1) is set by lib/hero-morph.tsx. */
+.home-header {
+  background-color: rgb(7 6 13 / calc(var(--p, 0) * 0.8));
+  border-color: rgb(38 35 64 / var(--p, 0));
+  backdrop-filter: blur(calc(var(--p, 0) * 8px));
+}
+.hero-fade { opacity: clamp(0, 1 - var(--p, 0) * 3, 1); }
 
 .hero-tagline {
   color: var(--accent-2);
@@ -73,11 +95,10 @@ body {
 }
 
 /* Animated neon blobs behind the hero. */
-.hero-glow { isolation: isolate; }
 .hero-glow::before,
 .hero-glow::after {
   content: "";
-  position: fixed; /* cover the full viewport regardless of hero height */
+  position: absolute; /* confined to the hero; scrolls away with it */
   inset: -20%;
   z-index: -1;
   filter: blur(60px);
@@ -105,8 +126,18 @@ body {
   to   { opacity: 1; transform: none; filter: none; }
 }
 .rise { animation: rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+/* Bouncing chevron under "Scroll" on the hero. */
+@keyframes cue {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+.scroll-cue { animation: cue 1.8s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .rise, .hero-glow::before, .hero-glow::after { animation: none; }
+  .rise, .scroll-cue, .hero-glow::before, .hero-glow::after { animation: none; }
 }
 
 /* ---------- Prose (MDX) ---------- */
